@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <customer>
+            <customer_attributes>
+                <hobby>
+                    <item1>
+                        <value>yoga</value>
+                        <label>Yoga</label>
+                        <order>10</order>
+                    </item1>
+                    <item2>
+                        <value>traveling</value>
+                        <label>Traveling</label>
+                        <order>20</order>
+                    </item2>
+                    <item3>
+                        <value>hiking</value>
+                        <label>Hiking</label>
+                        <order>30</order>
+                    </item3>
+                </hobby>
+            </customer_attributes>
+        </customer>
+    </default>
+</config>

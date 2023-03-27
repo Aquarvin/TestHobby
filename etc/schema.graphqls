@@ -1,0 +1,23 @@
+type Customer {
+    hobby: HobbyOutput @doc(description: "The customer's hobby.")
+    @resolver(
+        class: "\\Test\\Hobby\\Model\\Resolver\\Hobby"
+    )
+}
+
+input CustomerInput {
+    hobby: String @doc(description: "Customer Hobby Attribute Value")
+}
+
+type HobbyOutput {
+    value: String @doc(description: "Hobby Attribute value")
+    label: String @doc(description: "Hobby Attribute label")
+}
+
+type Mutation {
+    updateHobby(input: HobbyInput!): HobbyOutput @resolver(class: "\\Test\\Hobby\\Model\\Resolver\\UpdateHobby") @doc(description:"Update customer hobby")
+}
+
+input HobbyInput {
+    value: String! @doc(description: "Hobby Attribute value")
+}

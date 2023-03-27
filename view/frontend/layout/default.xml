@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="header.links">
+            <block name="hobby-header" template="Test_Hobby::hobby_section.phtml">
+                <arguments>
+                    <argument name="label" xsi:type="string" translate="true">Custom Header Link</argument>
+                    <argument name="path" xsi:type="string">*/*/*</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>

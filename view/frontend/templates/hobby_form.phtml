@@ -1,0 +1,40 @@
+<?php
+/** @var \Test\Hobby\ViewModel\HobbyViewModel $viewModel */
+$viewModel    = $block->getViewModel();
+$currentHobby = $viewModel->getCurrentHobby();
+?>
+<div>
+    <form name="updateHobby" method="post" id="updateHobby" class="form"
+          action="<?= $block->escapeUrl($block->getUrl('customer/hobby/editPost')) ?>"
+          data-hasrequired="<?= $block->escapeHtmlAttr(__('* Required Fields')) ?>"
+          data-mage-init='{"validation":{}}'>
+        <fieldset class="fieldset">
+            <legend class="legend"><span><?= $block->escapeHtmlAttr(__('Update hobby')) ?></span></legend>
+            <fieldset class="fieldset row">
+                <div class="fields col-md-6">
+                    <div class="field name required">
+                        <label class="label" for="title"><span><?= $block->
+                                escapeHtmlAttr(__('Hobby')) ?></span></label>
+                        <div class="control">
+                            <select name="hobby" id="hobby" class="input-text">
+                                <?php foreach ($viewModel->getHobbies() as $hobby): ?>
+                                    <option value="<?= $escaper->escapeHtmlAttr($hobby['value']) ?>"
+                                        <?php if ($currentHobby === $hobby['value']): ?>
+                                            selected="selected"
+                                        <?php endif; ?>
+                                    ><?= $escaper->escapeHtml($hobby['label']) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </fieldset>
+        <div class="actions-toolbar">
+            <div class="primary">
+                <button type="submit" class="action submit primary" title="Save">
+                    <span><?= $block->escapeHtmlAttr(__('Update')) ?></span></button>
+            </div>
+        </div>
+    </form>
+</div>

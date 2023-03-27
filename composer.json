@@ -1,0 +1,21 @@
+{
+  "name": "test/module-hobby",
+  "version": "1.0.0",
+  "description": "Test module for hobby customer attribute",
+  "type": "magento2-module",
+  "require": {
+    "magento/framework": "*",
+    "magento/module-customer": "103.0.*"
+  },
+  "license": [
+    "Proprietary"
+  ],
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "Test\\Hobby\\": ""
+    }
+  }
+}
