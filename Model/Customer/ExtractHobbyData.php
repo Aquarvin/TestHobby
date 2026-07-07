@@ -32,6 +32,10 @@ class ExtractHobbyData
         $options    = $this->hobbyOptions->getAllOptions();
         $hobbyId    = array_search($hobbyValue, array_column($options, 'value'));
 
+        if ($hobbyId === false) {
+            return null;
+        }
+
         return [
             'value' => $options[$hobbyId]['value'],
             'label' => $options[$hobbyId]['label'],

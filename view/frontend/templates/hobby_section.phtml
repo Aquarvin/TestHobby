@@ -1,7 +1,10 @@
+<?php
+$hobbyLabel = (string)__('Hobby: %1!', '%1');
+[$hobbyLabelBefore, $hobbyLabelAfter] = array_pad(explode('%1', $hobbyLabel, 2), 2, '');
+?>
 <li class="hobby-section" data-bind="scope: 'hobbySection'">
     <!-- ko if: hobbySection().hobby -->
-    <span data-bind="text: new String('<?= $escaper->escapeHtml(__('Hobby: %1!', '%1')) ?>').replace('%1', hobbySection().hobby)">
-        </span>
+    <span><?= $escaper->escapeHtml($hobbyLabelBefore) ?><!-- ko text: hobbySection().hobby --><!-- /ko --><?= $escaper->escapeHtml($hobbyLabelAfter) ?></span>
     <!-- /ko -->
 </li>
 <script type="text/x-magento-init">

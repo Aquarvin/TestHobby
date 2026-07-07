@@ -5,6 +5,7 @@ namespace Test\Hobby\Model\Customer;
 
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
+use Psr\Log\LoggerInterface;
 use Test\Hobby\Model\Source\Hobby as HobbyOptions;
 use Test\Hobby\Setup\Patch\Data\AddHobbyCustomerAttribute;
 use Magento\Framework\GraphQl\Exception\GraphQlInputException;
@@ -17,10 +18,12 @@ class HobbyDataProvider
     /**
      * @param HobbyOptions $hobbyOptions
      * @param CustomerRepositoryInterface $customerRepository
+     * @param LoggerInterface $logger
      */
     public function __construct(
         private readonly HobbyOptions $hobbyOptions,
-        private readonly CustomerRepositoryInterface $customerRepository
+        private readonly CustomerRepositoryInterface $customerRepository,
+        private readonly LoggerInterface $logger
     ) {
     }
 
@@ -37,18 +40,19 @@ class HobbyDataProvider
             $customer->setCustomAttribute(AddHobbyCustomerAttribute::ATTRIBUTE_CODE, $data['value']);
             $this->customerRepository->save($customer);
         } catch (\Exception $e) {
-            throw new GraphQlInputException(__($e->getMessage()));
+            $this->logger->error($e->getMessage());
+            throw new GraphQlInputException(__('We can\'t update hobby.'));
         }
 
         return $customer;
     }
 
     /**
-     * @param $data
+     * @param array $data
      * @return void
      * @throws GraphQlInputException
      */
-    private function validateData($data): void
+    private function validateData(array $data): void
     {
         if (empty($data['value'])) {
             throw new GraphQlInputException(

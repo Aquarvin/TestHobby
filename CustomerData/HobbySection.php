@@ -31,13 +31,18 @@ class HobbySection implements SectionSourceInterface
     public function getSectionData(): array
     {
         $customerData = $this->customerSession->getCustomerData();
-        $hobbyValue   = $customerData->getCustomAttribute(AddHobbyCustomerAttribute::ATTRIBUTE_CODE)->getValue();
+        if (!$customerData || !$customerData->getCustomAttribute(AddHobbyCustomerAttribute::ATTRIBUTE_CODE)) {
+            return [];
+        }
+        $hobbyValue = $customerData->getCustomAttribute(AddHobbyCustomerAttribute::ATTRIBUTE_CODE)->getValue();
         if ($hobbyValue) {
             $options = $this->hobbySource->getAllOptions();
             $hobbyId = array_search($hobbyValue, array_column($options, 'value'));
-            return [
-                'hobby' => $options[$hobbyId]['label'],
-            ];
+            if ($hobbyId !== false) {
+                return [
+                    'hobby' => $options[$hobbyId]['label'],
+                ];
+            }
         }
         return [];
     }
