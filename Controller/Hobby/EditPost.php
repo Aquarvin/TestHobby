@@ -15,6 +15,8 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\State\InputMismatchException;
 use Magento\Framework\Message\ManagerInterface;
+use Psr\Log\LoggerInterface;
+use Test\Hobby\Model\Source\Hobby;
 use Test\Hobby\Setup\Patch\Data\AddHobbyCustomerAttribute;
 
 /**
@@ -28,13 +30,17 @@ class EditPost implements HttpPostActionInterface, AccountInterface
      * @param CustomerRepositoryInterface $customerRepository
      * @param ManagerInterface $manager
      * @param RedirectFactory $redirectFactory
+     * @param Hobby $hobbySource
+     * @param LoggerInterface $logger
      */
     public function __construct(
         private readonly Session $customerSession,
         private readonly RequestInterface $request,
         private readonly CustomerRepositoryInterface $customerRepository,
         private readonly ManagerInterface $manager,
-        private readonly RedirectFactory $redirectFactory
+        private readonly RedirectFactory $redirectFactory,
+        private readonly Hobby $hobbySource,
+        private readonly LoggerInterface $logger
     ) {
     }
 
@@ -42,23 +48,28 @@ class EditPost implements HttpPostActionInterface, AccountInterface
      * Save selected hobby for current customer.
      *
      * @return Redirect
-     * @throws LocalizedException
-     * @throws NoSuchEntityException
      */
     public function execute(): Redirect
     {
         $resultRedirect = $this->redirectFactory->create();
-        $customer       = $this->customerSession->getCustomer();
-        $customerData   = $this->customerSession->getCustomerData();
+        $hobby          = $this->request->getParam('hobby');
+        $options        = $this->hobbySource->getAllOptions();
+
+        if (!in_array($hobby, array_column($options, 'value'), true)) {
+            $this->manager->addErrorMessage(__('The specified hobby is not valid.'));
+            return $resultRedirect->setPath('*/*/edit');
+        }
+
         try {
-            $hobby = $this->request->getParam('hobby');
+            $customerData = $this->customerSession->getCustomerData();
             $customerData->setCustomAttribute(AddHobbyCustomerAttribute::ATTRIBUTE_CODE, $hobby);
-            $customer->updateData($customerData);
-            $customer->setHobby($hobby);
             $this->customerRepository->save($customerData);
-        } catch (InputException|InputMismatchException $e) {
+            $this->manager->addSuccessMessage(__('Your hobby has been updated.'));
+        } catch (InputException|InputMismatchException|NoSuchEntityException $e) {
+            $this->logger->error($e->getMessage());
+            $this->manager->addErrorMessage(__('We can\'t update hobby'));
         } catch (LocalizedException $e) {
-            $this->manager->addErrorMessage('We can\'t update hobby');
+            $this->manager->addErrorMessage(__('We can\'t update hobby'));
         }
 
         return $resultRedirect->setPath('*/*/edit');
